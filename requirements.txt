@@ -4,3 +4,4 @@ sumy
 nltk
 fpdf
 gunicorn
+pytube
