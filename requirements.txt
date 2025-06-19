@@ -5,3 +5,4 @@ nltk
 fpdf
 gunicorn
 pytube
+pydub
