@@ -1,0 +1,257 @@
+{% extends "base.html" %}
+
+{% block title %}Notes Generated - Smart Note Generator{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Success Header -->
+            <div class="text-center mb-5">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle text-success"></i>
+                </div>
+                <h2 class="mt-3 mb-2">Notes Generated Successfully!</h2>
+                <p class="text-muted">
+                    Content extracted using 
+                    <span class="badge bg-primary">
+                        <i class="fas fa-{{ 'closed-captioning' if method_used == 'subtitles' else 'microphone' }} me-1"></i>
+                        {{ 'Subtitles' if method_used == 'subtitles' else 'Audio Transcription' }}
+                    </span>
+                </p>
+            </div>
+
+            <!-- Video Title Card -->
+            <div class="card title-card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="video-thumbnail me-3">
+                            <i class="fab fa-youtube text-danger fs-2"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h4 class="card-title mb-1">{{ video_title }}</h4>
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-calendar me-1"></i>
+                                <span id="generatedDate">Generated just now</span>
+                            </p>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('download_pdf') }}" class="btn btn-success btn-lg">
+                                <i class="fas fa-download me-2"></i>Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Content -->
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- Special Professional Summary Card -->
+                    {% if summary.special_summary %}
+                    <div class="card special-summary-card shadow-sm mb-4">
+                        <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h5 class="mb-0">
+                                <i class="fas fa-star me-2"></i>Professional Summary & Analysis
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="special-summary-content">
+                                <p class="lead text-muted mb-3">{{ summary.special_summary }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Main Summary Card -->
+                    <div class="card summary-card shadow-sm mb-4">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-clipboard-list me-2"></i>{{ summary.title if summary.title else 'Key Points Summary' }}
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if summary.main_points %}
+                            <div class="section mb-4">
+                                <h6 class="section-title">
+                                    <i class="fas fa-check-circle me-2 text-success"></i>Professional Summary Points
+                                </h6>
+                                <ul class="professional-list">
+                                    {% for point in summary.main_points %}
+                                    <li class="mb-3 professional-point">{{ point }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+
+                            <!-- Detailed Content Explanations Section -->
+                            {% if summary.detailed_explanations %}
+                            <div class="section mb-4">
+                                <h6 class="section-title">
+                                    <i class="fas fa-book-open me-2 text-info"></i>In-Depth Content Analysis
+                                </h6>
+                                <div class="detailed-explanations">
+                                    {% for explanation in summary.detailed_explanations %}
+                                    <div class="explanation-paragraph mb-4 p-4 bg-light rounded-3 border-start border-info border-4">
+                                        <p class="mb-0 text-dark lh-lg">{{ explanation }}</p>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if summary.key_insights %}
+                            <div class="section">
+                                <h6 class="section-title">
+                                    <i class="fas fa-brain me-2 text-info"></i>Content Analysis & Insights
+                                </h6>
+                                <ul class="insights-list">
+                                    {% for insight in summary.key_insights %}
+                                    <li class="mb-2 insight-point">{{ insight }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Full Transcript Card -->
+                    {% if summary.full_transcript %}
+                    <div class="card transcript-card shadow-sm mb-4">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-file-text me-2"></i>Complete Transcript
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="transcript-content" style="max-height: 300px; overflow-y: auto;">
+                                <p class="transcript-text">{{ summary.full_transcript }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-lg-4">
+                    <!-- Actions Card -->
+                    <div class="card action-card shadow-sm mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-tools me-2"></i>Actions
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('download_pdf') }}" class="btn btn-success">
+                                    <i class="fas fa-file-pdf me-2"></i>Download as PDF
+                                </a>
+                                <button class="btn btn-outline-primary" onclick="copyToClipboard()">
+                                    <i class="fas fa-copy me-2"></i>Copy to Clipboard
+                                </button>
+                                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-plus me-2"></i>Generate More Notes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Card -->
+                    <div class="card stats-card shadow-sm">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>Summary Stats
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="stat-item">
+                                <div class="stat-value">{{ summary.main_points|length if summary.main_points else 0 }}</div>
+                                <div class="stat-label">Main Points</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{ summary.key_insights|length if summary.key_insights else 0 }}</div>
+                                <div class="stat-label">Key Insights</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">
+                                    <i class="fas fa-{{ 'closed-captioning' if method_used == 'subtitles' else 'microphone' }}"></i>
+                                </div>
+                                <div class="stat-label">{{ 'Subtitles' if method_used == 'subtitles' else 'Audio AI' }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back to Home -->
+            <div class="text-center mt-5">
+                <a href="{{ url_for('index') }}" class="btn btn-outline-primary btn-lg">
+                    <i class="fas fa-arrow-left me-2"></i>Generate More Notes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden content for copying -->
+<div id="copyContent" style="display: none;">
+{{ video_title }}
+
+{% if summary.title %}Summary: {{ summary.title }}{% endif %}
+
+{% if summary.main_points %}
+Main Points:
+{% for point in summary.main_points %}
+• {{ point }}
+{% endfor %}
+{% endif %}
+
+{% if summary.key_insights %}
+Key Insights:
+{% for insight in summary.key_insights %}
+• {{ insight }}
+{% endfor %}
+{% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyToClipboard() {
+    const content = document.getElementById('copyContent').textContent;
+    navigator.clipboard.writeText(content).then(function() {
+        // Show success message
+        const btn = event.target.closest('button');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check me-2"></i>Copied!';
+        btn.classList.remove('btn-outline-primary');
+        btn.classList.add('btn-success');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-primary');
+        }, 2000);
+    }).catch(function(err) {
+        console.error('Failed to copy: ', err);
+        alert('Failed to copy to clipboard');
+    });
+}
+
+// Set the current date
+document.addEventListener('DOMContentLoaded', function() {
+    const dateElement = document.getElementById('generatedDate');
+    if (dateElement) {
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+        dateElement.textContent = `Generated on ${formattedDate}`;
+    }
+});
+</script>
+{% endblock %}

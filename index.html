@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Smart Note Generator - Convert YouTube Videos to PDF Notes{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="hero-content">
+                    <div class="hero-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h1 class="hero-title">Smart Note Generator</h1>
+                    <p class="hero-subtitle">Transform YouTube videos into organized PDF notes with AI-powered summarization</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Main Input Card -->
+            <div class="card main-card shadow-lg">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-link text-primary fs-1 mb-3"></i>
+                        <h3 class="card-title">Enter YouTube URL</h3>
+                        <p class="text-muted">Paste any YouTube video URL to generate intelligent notes</p>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('process_video') }}">
+                        <div class="mb-4">
+                            <label for="youtube_url" class="form-label fw-semibold">YouTube Video URL</label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light">
+                                    <i class="fab fa-youtube text-danger"></i>
+                                </span>
+                                <input type="text" 
+                                       class="form-control" 
+                                       name="youtube_url" 
+                                       placeholder="https://www.youtube.com/watch?v=..." 
+                                       required>
+                            </div>
+                            <div class="form-text">
+                                <small><i class="fas fa-info-circle me-1"></i>Supports youtube.com and youtu.be URLs</small>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg btn-generate">
+                                <i class="fas fa-magic me-2"></i>Generate Notes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Feature Cards -->
+            <div class="row mt-5">
+                <div class="col-md-4 mb-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-closed-captioning"></i>
+                            </div>
+                            <h5 class="card-title">Smart Extraction</h5>
+                            <p class="card-text">Automatically extracts subtitles or transcribes audio using AI</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h5 class="card-title">AI Summarization</h5>
+                            <p class="card-text">Converts long content into organized bullet points and key insights</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <h5 class="card-title">PDF Export</h5>
+                            <p class="card-text">Download your notes as a professionally formatted PDF</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works -->
+            <div class="card info-card mt-5">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-4">
+                        <i class="fas fa-cogs me-2"></i>How It Works
+                    </h4>
+                    <div class="row">
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="step-number">1</div>
+                            <h6>Paste URL</h6>
+                            <p class="small text-muted">Enter YouTube video link</p>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="step-number">2</div>
+                            <h6>Extract Content</h6>
+                            <p class="small text-muted">Get subtitles or transcribe audio</p>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="step-number">3</div>
+                            <h6>AI Summary</h6>
+                            <p class="small text-muted">Generate organized notes</p>
+                        </div>
+                        <div class="col-md-3 text-center mb-3">
+                            <div class="step-number">4</div>
+                            <h6>Download PDF</h6>
+                            <p class="small text-muted">Save your notes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          {% endblock %}
+
+{% block scripts %}
+<script>
+// No JavaScript validation - form works with pure HTML
+</script>
+{% endblock %}

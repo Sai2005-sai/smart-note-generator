@@ -1,0 +1,6 @@
+flask
+youtube_transcript_api
+sumy
+nltk
+fpdf
+gunicorn
